@@ -1,29 +1,30 @@
 "use client";
 import { Header } from "@/components/Header";
 import Layout from "../components/Layout";
-
+import { useEffect, useState } from "react";
+import Card from "@/components/Card";
+import DropDown from "@/components/DropDown";
+import data from "@/data/data.json";
+import FilterContainer from "@/components/FilterContainer";
+import Container from "@/components/Container";
+import { DataProvider, useData } from "@/context/DataContext";
+interface YearInterface {
+  year: string;
+}
 export default function Home() {
-  const fetchData = async () => {
-    const response = await fetch("/api/data", {
-      method: "GET",
-    });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data); // Log response data
-    } else {
-      console.error(
-        "Failed to fetch data:",
-        response.status,
-        response.statusText
-      );
-    }
-  };
+  // console.log("merged", mergedYearData);
   return (
-    <Layout>
-      <Header />
-      <main className="flex min-h-screen bg-red-500 flex-col items-center justify-around pt-4 p-24">
-        <button onClick={fetchData}>Click</button>
-      </main>
-    </Layout>
+    <DataProvider>
+      <Layout>
+        <Header />
+
+        <main className=" ">
+          <div className="flex flex-col  justify-center space-x-1 p-2">
+            <FilterContainer />
+            <Container />
+          </div>
+        </main>
+      </Layout>
+    </DataProvider>
   );
 }

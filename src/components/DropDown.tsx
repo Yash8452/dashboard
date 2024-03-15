@@ -1,70 +1,51 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Card from "./Card";
-import Container from "./Container";
+import { useData } from "@/context/DataContext";
 
-const DropDown = ({ filter }: any) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState(""); // State to store the selected year
-  const [values, setValues] = useState([]);
-  const [limit, setLimit] = useState(5);
-  const limitedData = data.slice(0, limit);
+const DropDown = ({ filter, k }: any) => {
+  console.log(filter);
+  const { fetchData, values, setValues, setFilteredData } = useData();
 
-  const filterValues = async (filter: any) => {
-    // console.log("in dd", filter);?
+  // const [filteredData, setFilteredData] = useState([]);
+  // const [values, setValues] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchFilteredData = async (val: string) => {
+    setIsLoading(true);
     try {
-      const response = await fetch(
-        `/api/data/filters/values?filter=${filter}`,
-        {
-          method: "GET",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok.");
-      }
-      const temp = await response.json();
-      const temp2 = temp?.uniqueValues;
-
-      //   console.log("Response in dropdown", temp);
-      setValues(temp2);
-      // Don't log `values` here, it won't reflect the updated state immediately
+      const response: any = await fetchData(filter, val);
+      // console.log(response);
+      const responseData = response.data;
+      setFilteredData(responseData);
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  //   working fine ---    first
+  const filterValues = async (filter: any) => {
+    setIsLoading(true);
+    try {
+      const response: any = await fetchData(filter); // Wait for the promise to resolve
+      const responseData = response.data;
+      setValues(responseData);
+      // console.log(responseData);
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Log `values` after the component re-renders due to state update
   useEffect(() => {
     filterValues(filter);
-    // console.log("Updated values:", values);
-  }, [values]);
-
-  const fetchFilteredData = async (year: string) => {
-    console.log(filter);
-    try {
-      const response = await fetch(
-        `/api/data/filters/${filter}?${filter}=${year}`,
-        {
-          method: "GET",
-        }
-      );
-      if (response.status === 201) {
-        const jsonData = await response.json();
-        const filteredData = jsonData.data;
-        setData(filteredData);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  }, [filter]);
+  // console.log("*", values);
+  const handleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFilter = event.target.value;
-    setSelectedFilter(selectedFilter); // Update selected year in state
-    fetchFilteredData(selectedFilter); // Fetch filtered data based on selected year
+    await fetchFilteredData(selectedFilter); // Use t
   };
 
   return (
@@ -73,25 +54,34 @@ const DropDown = ({ filter }: any) => {
         <form className="w-44  p-2">
           <fieldset>
             <div className="relative border border-gray-300 text-gray-800 bg-white shadow-lg">
-              <select
-                onChange={handleChange}
-                className="appearance-none w-full py-1 px-2 bg-white"
-                name="whatever"
-                id="frm-whatever"
-              >
-                <option value={filter}>{filter}</option>
-
-                {values.map((val: any) => (
-                  <option
-                    value={val}
-                    onClick={() => fetchFilteredData(val)}
-                    className="p-1 text-center cursor-pointer border-b-gray-500"
-                    key={val}
+              {isLoading ? (
+                <div>Loading...</div> // Show loading indicator when isLoading is true
+              ) : (
+                <>
+                  <select
+                    onChange={handleChange}
+                    className="appearance-none w-full py-1 px-2 bg-white"
+                    name="whatever"
+                    id="frm-whatever"
                   >
-                    {val}
-                  </option>
-                ))}
-              </select>
+                    <option value={filter}>{filter}</option>
+
+                    {values &&
+                      Array.isArray(values) &&
+                      values.map((val: any, k) => (
+                        <option
+                          value={val}
+                          onClick={() => fetchFilteredData(val)}
+                          className="p-1 text-center cursor-pointer border-b-gray-500"
+                          key={k}
+                        >
+                          {val}
+                        </option>
+                      ))}
+                  </select>
+                </>
+              )}
+
               <div className="pointer-events-none absolute right-0 top-0 bottom-0 flex items-center px-2 text-gray-700 border-l">
                 <svg
                   className="h-4 w-4"
