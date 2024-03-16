@@ -2,17 +2,12 @@ import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import { useData } from "@/context/DataContext";
 import Sample from "./Chart/Sample";
-import BarChart from "./Chart/BarChart";
-import PolarChart from "./Chart/PolarChart";
-import PieChart from "./Chart/PieChart";
-import RadarChart from "./Chart/RadarChart";
 
 const Container = () => {
   const { data, setData, filteredData } = useData();
   const [limit, setLimit] = useState(4);
   const limitedData = filteredData.slice(0, limit);
-
-  console.log(filteredData.length);
+  // console.log(limitedData.length);
 
   return (
     <>
@@ -61,16 +56,10 @@ const Container = () => {
             )}
           </div>
           <div className="bg-black hidden peer-checked/tab-two:block  h-screen p-4 w-full">
+            Second tab pane
             {/* Filter data ad dislay the chart */}
             {/* Charts */}
-            <div className="pt-10 flex  md:flex-wrap  gap-4  items-center justify-center md:justify-around ">
-              <Sample />
-              <RadarChart />
-              {/* working fine with data */}
-              <PolarChart />
-              <PieChart />
-              <BarChart />
-            </div>
+            <Sample/>
           </div>
         </section>
       </div>

@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useData } from "@/context/DataContext";
+import Sample from "./Chart/Sample";
 
 const DropDown = ({ filter, k }: any) => {
   console.log(filter);
-  const { fetchData, values, setValues, setFilteredData } = useData();
-
+  const { fetchData, filteredData, setFilteredData } = useData();
   // const [filteredData, setFilteredData] = useState([]);
-  // const [values, setValues] = useState([]);
+  const [values, setValues] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -97,7 +97,9 @@ const DropDown = ({ filter, k }: any) => {
       </div>
 
       {/* DATA */}
-      {/* <Container limitedData={limitedData} data={data} /> */}
+      {/* <section className="flex h-full flex-row flex-wrap mt-4 m-8">
+        <Sample />
+      </section> */}
     </>
   );
 };
