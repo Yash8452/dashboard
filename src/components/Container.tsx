@@ -1,22 +1,92 @@
+"use client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
-import Card from "./Card";
+// import Card from "./Card";
 import { useData } from "@/context/DataContext";
 import Sample from "./Chart/Sample";
 import BarChart from "./Chart/BarChart";
 import PolarChart from "./Chart/PolarChart";
 import PieChart from "./Chart/PieChart";
 import RadarChart from "./Chart/RadarChart";
+import DataCard from "./DataCard";
+import { Skeleton } from "./ui/skeleton";
+import SkeletonCard from "./SkeletonCard";
+import AreaChart from "./Chart/AreaChart";
+import LineChart from "./Chart/LineChart";
+import LineLikeChart from "./Chart/LineLikeChart";
 
 const Container = () => {
   const { data, setData, filteredData } = useData();
   const [limit, setLimit] = useState(4);
-  const limitedData = filteredData.slice(0, limit);
-
-  console.log(filteredData.length);
+  const limitedData = filteredData;
+  // const limitedData = filteredData.slice(0, limit);
+  // const limitedData: any[] = [];
+  // console.log(filteredData.length);
 
   return (
     <>
-      <div>
+      <Tabs defaultValue="account" className="mt-6 w-[100%]">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="text">Text Representation</TabsTrigger>
+          <TabsTrigger value="visual">Visual Representation</TabsTrigger>
+        </TabsList>
+        <TabsContent value="text">
+          <Card>
+            <CardContent className="space-y-2">
+              {limitedData && limitedData.length === 0 ? (
+                <div className="flex justify-center items-center">
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </div>
+              ) : limitedData && limitedData.length > 0 ? (
+                <div className="flex flex-wrap justify-center pt-5 gap-2">
+                  {limitedData.map((limitedData: any, k: any) => {
+                    return <DataCard data={limitedData} key={k} />;
+                  })}
+                </div>
+              ) : (
+                <div className="flex justify-center items-center">
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="visual">
+          <Card>
+            <CardContent className="space-y-2">
+              <div className="pt-10 flex  md:flex-wrap  gap-4  items-center justify-center md:justify-around ">
+                <LineLikeChart />
+                <RadarChart />
+                <AreaChart />
+                <PolarChart />
+                <LineChart />
+                <PieChart />
+                <BarChart />
+                <Sample />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </>
+  );
+};
+{
+  /* <div>
         <section className="flex h-full flex-row flex-wrap mt-4 m-8">
           <input
             id="tab-one"
@@ -61,21 +131,24 @@ const Container = () => {
             )}
           </div>
           <div className="bg-black hidden peer-checked/tab-two:block  h-screen p-4 w-full">
-            {/* Filter data ad dislay the chart */}
-            {/* Charts */}
-            <div className="pt-10 flex  md:flex-wrap  gap-4  items-center justify-center md:justify-around ">
-              <Sample />
-              <RadarChart />
-              {/* working fine with data */}
-              <PolarChart />
-              <PieChart />
-              <BarChart />
-            </div>
-          </div>
-        </section>
-      </div>
-    </>
-  );
-};
+            {/* Filter data ad dislay the chart */
+}
+{
+  /* Charts */
+}
+//             <div className="pt-10 flex  md:flex-wrap  gap-4  items-center justify-center md:justify-around ">
+//               <Sample />
+//               <RadarChart />
+
+//               <PolarChart />
+//               <PieChart />
+//               <BarChart />
+//             </div>
+//           </div>
+//         </section>
+//       </div>
+//     </>
+//   );
+// };
 
 export default Container;

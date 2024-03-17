@@ -1,69 +1,82 @@
 import React from "react";
-import { PolarArea } from "react-chartjs-2";
-import Chart from "chart.js/auto"; // Import Chart.js with automatic imports
+import { PolarArea, Radar } from "react-chartjs-2";
+import Chart, { ChartData } from "chart.js/auto"; // Import Chart.js with automatic imports
 import { useData } from "@/context/DataContext";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
+import { colors } from "@/utils/constants";
 
 export default function () {
   // Register the radial linear scale
-  Chart.register({
-    id: "radialLinear",
-    type: Chart.LinearScale,
-    position: "radial",
-  });
+  // Chart.register({
+  //   id: "radialLinear",
+  //   type: Chart.LinearScale,
+  //   position: "radial",
+  // });
 
   const { filteredData } = useData();
 
-  let uniqueSectors: string[] = [];
+  let uniqueTopics: string[] = [];
 
-  // Using forEach to add unique sector names to an array
+  // Using forEach to add unique topic names to an array
   filteredData.forEach((i) => {
-    if (!uniqueSectors.includes(i.sector) && i.sector !== "") {
-      uniqueSectors.push(i.sector);
+    if (!uniqueTopics.includes(i.topic) && i.topic !== "") {
+      uniqueTopics.push(i.topic);
     }
   });
 
-  // Counting the total number of projects in each sector uniquely
-  const sectorCount = uniqueSectors.map((item) => ({
-    sector: item,
-    count: filteredData.filter((i) => i.sector === item).length,
+  // Counting the total number of projects in each topic uniquely
+  const topicCount = uniqueTopics.map((item) => ({
+    topic: item,
+    count: filteredData.filter((i) => i.topic === item).length,
   }));
-  console.log(sectorCount);
-  const labels = uniqueSectors;
-  const data = {
+  // console.log(topicCount);
+  const labels = uniqueTopics;
+  const data: ChartData<"polarArea", number[], string> = {
     labels: labels,
+
     datasets: [
       {
-        label: uniqueSectors.map((e) => e),
-        data: sectorCount.map((e) => e.count), //
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(255, 205, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(201, 203, 207, 0.2)",
-        ],
-        borderColor: [
-          "rgb(255, 99, 132)",
-          "rgb(255, 159, 64)",
-          "rgb(255, 205, 86)",
-          "rgb(75, 192, 192)",
-          "rgb(54, 162, 235)",
-          "rgb(153, 102, 255)",
-          "rgb(201, 203, 207)",
-        ],
+        label: uniqueTopics.join(", "),
+        data: topicCount.map((e) => e.count), //
+        backgroundColor: colors,
+        borderColor: colors,
         borderWidth: 1,
       },
     ],
   };
 
-  const options = {};
+  const options = {
+    scales: {
+      r: {
+        grid: {
+          color: colors,
+        },
+      },
+    },
+  };
 
   return (
-    <div style={{ width: "40%" }}>
-      <h1 className="text-center font-extrabold text-gray-800">SECTORS</h1>
-      <PolarArea height={300} data={data} options={options} />
-    </div>
+    <>
+      {filteredData && filteredData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-full w-full md:h-[70vh] md:w-[40vw] rounded-xl" />
+        </div>
+      ) : filteredData && filteredData.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Total Projects based on Topic</CardTitle>
+          </CardHeader>
+
+          <CardContent className="h-[50vh] w-[30vw]">
+            <PolarArea height={300} data={data} options={options} />
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-full w-full md:h-[70vh] md:w-[40vw] rounded-xl" />
+        </div>
+      )}
+    </>
   );
 }

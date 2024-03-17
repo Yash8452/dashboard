@@ -10,11 +10,14 @@ import {
 import { Doughnut } from "react-chartjs-2";
 import { useData } from "@/context/DataContext";
 import { colors } from "@/utils/constants";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+
+import { Skeleton } from "../ui/skeleton";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function () {
   const { filteredData } = useData();
-
+  // const filteredData: any[] = [];
   const options = {
     maintainAspectRatio: false, // Allow the chart to not maintain aspect ratio
   };
@@ -30,7 +33,7 @@ export default function () {
     count: filteredData.filter((item) => item.pestle === pestle).length,
   }));
 
-  const data: Chart.ChartData<"doughnut"> = {
+  const data = {
     labels: uniquePestle,
     datasets: [
       {
@@ -46,11 +49,24 @@ export default function () {
 
   return (
     <>
-      <div style={{ width: "40%", height: "400px" }}>
-        {" "}
-        {/* Adjust the height here */}
-        <Doughnut data={data} options={options} />
-      </div>
+      {filteredData && filteredData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-full w-full md:h-[70vh] md:w-[40vw] rounded-xl" />
+        </div>
+      ) : filteredData && filteredData.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Total Projects based on Pestle</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[50vh] w-[30vw]">
+            <Doughnut data={data} options={options} />
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-full w-full md:h-[70vh] md:w-[40vw] rounded-xl" />
+        </div>
+      )}
     </>
   );
 }

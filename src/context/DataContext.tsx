@@ -25,9 +25,6 @@ interface DataContextValue {
   data: any[];
   setData: React.Dispatch<React.SetStateAction<any[]>>;
 
-  values: any[];
-  setValues: React.Dispatch<React.SetStateAction<any[]>>;
-
   filteredData: any[];
   setFilteredData: React.Dispatch<React.SetStateAction<any[]>>;
 
@@ -42,7 +39,6 @@ export const DataProvider: React.FC<DataContextProps> = ({ children }) => {
   const [data, setData] = useState<any[]>([]);
 
   const [filteredData, setFilteredData] = useState<any[]>([]);
-  const [values, setValues] = useState<any[]>([]);
 
   const fetchData = async (filter?: string, val?: string) => {
     try {
@@ -81,8 +77,6 @@ export const DataProvider: React.FC<DataContextProps> = ({ children }) => {
   const value: DataContextValue = {
     data,
     setData,
-    values,
-    setValues,
     filteredData,
     setFilteredData,
     fetchData,

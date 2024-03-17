@@ -1,3 +1,5 @@
+import { useTheme } from "next-themes";
+
 // Chartss
 export const colors = [
   "rgb(255, 99, 132)",
@@ -29,3 +31,9 @@ export const colors = [
   "rgb(255, 225, 255)",
   "rgb(54, 90, 40)",
 ];
+
+
+// console.log(theme);
+export const getGridColor = (theme: string | undefined) => {
+  return theme === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.5)";
+};

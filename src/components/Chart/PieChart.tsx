@@ -2,6 +2,8 @@ import { useData } from "@/context/DataContext";
 import { Chart } from "chart.js/auto";
 import React from "react";
 import { Pie } from "react-chartjs-2";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
 
 export default function () {
   Chart.register({
@@ -88,12 +90,25 @@ export default function () {
   const options = {};
   return (
     <>
-      <div style={{ width: "40%" }}>
-        <h1 className="text-center font-extrabold text-gray-800">
-          TOTAL CATEGORY-sort with year/intensity
-        </h1>
-        <Pie data={data} options={options} />
-      </div>
+      {filteredData && filteredData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-full w-full md:h-[70vh] md:w-[40vw] rounded-xl" />
+        </div>
+      ) : filteredData && filteredData.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>All Category</CardTitle>
+          </CardHeader>
+
+          <CardContent className="h-[50vh] w-[30vw]">
+            <Pie data={data} options={options} />
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-full w-full md:h-[70vh] md:w-[40vw] rounded-xl" />
+        </div>
+      )}
     </>
   );
 }

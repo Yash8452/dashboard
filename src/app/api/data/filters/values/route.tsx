@@ -3,10 +3,12 @@ import Data from "@/models/data.model";
 import { NextRequest, NextResponse } from "next/server";
 import { URL } from "url";
 interface DataItem {
-  end_year: string;
+  end_year: number;
   intensity: number;
   sector: string;
   topic: string;
+  source: string;
+  pestle: string;
   insight: string;
   url: string;
   region: string;
@@ -29,6 +31,8 @@ export async function GET(req: NextRequest) {
       "end_year",
       "intensity",
       "sector",
+      "source",
+      "pestle",
       "topic",
       "insight",
       "url",

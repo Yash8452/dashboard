@@ -1,7 +1,7 @@
 import { useData } from "@/context/DataContext";
 import { Chart } from "chart.js/auto";
 import React from "react";
-import { Pie, Radar } from "react-chartjs-2";
+import { Line, Pie, Radar } from "react-chartjs-2";
 import { Skeleton } from "../ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { colors, getGridColor } from "@/utils/constants";
@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 
 export default function () {
   Chart.register({
-    id: "arc",
+    id: "line",
     beforeDraw: (chart, args, options) => {
       const {
         ctx,
@@ -24,48 +24,60 @@ export default function () {
     },
   });
   const { filteredData } = useData();
-  const { theme } = useTheme();
-  let uniqueRegion: any[] = [];
-  //using forEach because it doesn't return any array
+  let uniqueIntensity: any[] = [];
   filteredData.forEach((i) => {
-    if (!uniqueRegion.includes(i.region) && i.region !== "") {
-      uniqueRegion.push(i.region);
+    if (!uniqueIntensity.includes(i.intensity) && i.intensity !== "") {
+      uniqueIntensity.push(i.intensity);
     }
   });
 
-  const projectCount = uniqueRegion.map((item) => ({
-    region: item,
-    count: filteredData.filter((i) => i.region === item).length,
-  }));
-  // console.log(projectCount);
-  // console.log(uniqueRegion);
+  let uniqueYear: any[] = [];
+  filteredData.forEach((i) => {
+    if (!uniqueYear.includes(i.end_year) && i.end_year !== "") {
+      uniqueYear.push(i.end_year);
+    }
+  });
+
+  uniqueYear.sort((a, b) => a - b);
+
+  const intensityData = uniqueIntensity.map((item) => {
+    return {
+      intensity: item,
+      year: uniqueYear.map((yearItem) => ({
+        year: yearItem,
+        count: filteredData.filter(
+          (i) => i.intensity === item && i.end_year === yearItem
+        ).length,
+      })),
+    };
+  });
+  // console.log("intensity", intensityData);
 
   const data = {
-    labels: projectCount.map((i) => i.region),
+    labels: uniqueYear, //x-axis
     datasets: [
       {
-        label: "PROJECTS", // Label for the dataset
-        data: projectCount.map((i) => i.count), // Values for the dataset
-        fill: true, // Optional: whether to fill the area under the radar
-        backgroundColor: "rgba(255, 99, 132, 0.2)", // Optional: fill color
-        borderColor: "rgb(255, 99, 132)", // Optional: border color
-        pointBackgroundColor: "rgb(255, 99, 132)", // Optional: point color
-        pointBorderColor: "#fff", // Optional: point border color
-        pointHoverBackgroundColor: "#fff", // Optional: point hover background color
-        pointHoverBorderColor: "rgb(255, 99, 132)", // Optional: point hover border color
+        label: "Intensity based on End Year ",
+        data: intensityData.map((i) => i.intensity),
+        backgroundColor: colors,
+        borderColor: colors,
+        borderWidth: 1,
       },
     ],
   };
+  const { theme } = useTheme();
+
   const options = {
-    elements: {
-      line: {
-        borderWidth: 2, // Increase border width for better visibility
-      },
-    },
+    maintainAspectRatio: false,
     scales: {
-      r: {
+      x: {
         grid: {
-          color: colors,
+          color: getGridColor(theme),
+        },
+      },
+      y: {
+        grid: {
+          color: getGridColor(theme),
         },
       },
     },
@@ -79,11 +91,11 @@ export default function () {
       ) : filteredData && filteredData.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Total Projects based on Region</CardTitle>
+            <CardTitle>Intensity based on End Year </CardTitle>
           </CardHeader>
 
           <CardContent className="h-[50vh] w-[30vw]">
-            <Radar data={data} options={options} />
+            <Line data={data} options={options} />
           </CardContent>
         </Card>
       ) : (

@@ -1,15 +1,33 @@
 "use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import React, { useEffect, useState } from "react";
 import { useData } from "@/context/DataContext";
-import Sample from "./Chart/Sample";
+import { ToastAction } from "./ui/toast";
+import { useToast } from "./ui/use-toast";
 
 const DropDown = ({ filter, k }: any) => {
-  console.log(filter);
+  // console.log(filter);
   const { fetchData, filteredData, setFilteredData } = useData();
-  // const [filteredData, setFilteredData] = useState([]);
   const [values, setValues] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const fetchFilteredData = async (val: string) => {
     setIsLoading(true);
@@ -50,7 +68,36 @@ const DropDown = ({ filter, k }: any) => {
 
   return (
     <>
-      <div className="flex justify-center">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">{filter}</Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent className="w-26">
+          <DropdownMenuGroup className="h-[40vh] scrollbar">
+            {values &&
+              Array.isArray(values) &&
+              values.map((val: any, k) => (
+                <DropdownMenuItem
+                  // need to use type for value
+                  value={val}
+                  onClick={() => {
+                    fetchFilteredData(val);
+                    toast({
+                      title: `${filter.toUpperCase()} Filter Updated Successfully`,
+                    });
+                  }}
+                  className="p-1 text-center cursor-pointer border-b-gray-500"
+                  key={k}
+                >
+                  {val}
+                </DropdownMenuItem>
+              ))}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* <div className="flex justify-center">
         <form className="w-44  p-2">
           <fieldset>
             <div className="relative border border-gray-300 text-gray-800 bg-white shadow-lg">
@@ -94,12 +141,7 @@ const DropDown = ({ filter, k }: any) => {
             </div>
           </fieldset>
         </form>
-      </div>
-
-      {/* DATA */}
-      {/* <section className="flex h-full flex-row flex-wrap mt-4 m-8">
-        <Sample />
-      </section> */}
+      </div> */}
     </>
   );
 };

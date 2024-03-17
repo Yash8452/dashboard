@@ -6,8 +6,8 @@ export async function GET(req: NextRequest) {
   await connect();
 
   const url = new URL(req.url);
-  const filter = url.searchParams.get("filter");
-  const value = url.searchParams.get("value");
+  let filter = url.searchParams.get("filter");
+  let value = url.searchParams.get("value");
 
   try {
     if (!filter || !value) {
@@ -21,10 +21,39 @@ export async function GET(req: NextRequest) {
     }
 
     // Construct the query dynamically
-    const query: Record<string, string | null | undefined> = {};
-    query[filter] = value;
+    const query: Record<string, any> = {};
+
+    if (filter === "end_year" && value !== null) {
+      // Convert value to a number if filter is "end_value"
+      const numericValue = parseInt(value);
+      if (!isNaN(numericValue)) {
+        console.log("Numeric value:", numericValue);
+        // Check if conversion was successful
+        query[filter] = numericValue;
+      } else {
+        return NextResponse.json(
+          {
+            message: "Invalid value for 'end_value'. Must be a valid number.",
+            success: false,
+          },
+          { status: 400 }
+        );
+      }
+    } else if (value !== null && value !== "") {
+      query[filter] = value;
+    }
+
+    // Add the additional filtering condition here
+    query["$or"] = [
+      { end_year: { $exists: true } }, // Include records where end_year exists
+      { end_year: "" }, // Include records with empty end_year
+    ];
+
+    console.log("Constructed query:", query);
 
     const data = await dataModel.find(query);
+
+    console.log("Resulting data:", data);
 
     if (!data || data.length === 0) {
       return NextResponse.json(

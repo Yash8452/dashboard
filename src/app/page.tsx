@@ -1,30 +1,34 @@
 "use client";
 import { Header } from "@/components/Header";
 import Layout from "../components/Layout";
-import { useEffect, useState } from "react";
-import Card from "@/components/Card";
-import DropDown from "@/components/DropDown";
-import data from "@/data/data.json";
 import FilterContainer from "@/components/FilterContainer";
 import Container from "@/components/Container";
-import { DataProvider, useData } from "@/context/DataContext";
+import { DataProvider } from "@/context/DataContext";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 interface YearInterface {
   year: string;
 }
 export default function Home() {
   // console.log("merged", mergedYearData);
   return (
-    <DataProvider>
-      <Layout>
-        <Header />
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <DataProvider>
+        <Layout>
+          <Header />
 
-        <main className=" ">
-          <div className="flex flex-col  justify-center space-x-1 p-2">
-            <FilterContainer />
-            <Container />
-          </div>
-        </main>
-      </Layout>
-    </DataProvider>
+          <main className="scrollbar">
+            <div className="flex flex-col  justify-center items-center p-2 space-x-1 ">
+              <FilterContainer />
+              <Container />
+            </div>
+          </main>
+        </Layout>
+      </DataProvider>
+    </ThemeProvider>
   );
 }
