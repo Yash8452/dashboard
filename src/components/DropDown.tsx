@@ -71,8 +71,7 @@ const DropDown = ({ filter, k }: any) => {
               Array.isArray(values) &&
               values.map((val: any, k) => (
                 <DropdownMenuItem
-                  // need to use type for value
-                  value={val}
+                  // need to 
                   onClick={() => {
                     fetchFilteredData(val);
                     toast({
