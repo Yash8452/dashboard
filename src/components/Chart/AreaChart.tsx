@@ -1,13 +1,13 @@
+import React from "react";
 import { useData } from "@/context/DataContext";
 import { Chart, ChartData } from "chart.js/auto";
-import React from "react";
 import { Line, Pie, Radar } from "react-chartjs-2";
 import { Skeleton } from "../ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { colors, getGridColor } from "@/utils/constants";
 import { useTheme } from "next-themes";
 
-export default function () {
+export default function AreaChart () {
   Chart.register({
     id: "line",
     beforeDraw: (chart, args, options) => {

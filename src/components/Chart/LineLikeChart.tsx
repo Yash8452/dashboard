@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { colors, getGridColor } from "@/utils/constants";
 import { useTheme } from "next-themes";
 
-export default function () {
+export default function LineLikeChart () {
   //   Chart.register({
   //     id: "line",
   //     beforeDraw: (chart, args, options) => {

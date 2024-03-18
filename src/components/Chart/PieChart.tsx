@@ -5,7 +5,7 @@ import { Pie } from "react-chartjs-2";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 
-export default function () {
+export default function PieChart() {
   Chart.register({
     id: "arc",
     beforeDraw: (chart, args, options) => {

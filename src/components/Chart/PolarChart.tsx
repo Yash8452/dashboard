@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { colors } from "@/utils/constants";
 
-export default function () {
+export default function PolarChart () {
   // Register the radial linear scale
   // Chart.register({
   //   id: "radialLinear",

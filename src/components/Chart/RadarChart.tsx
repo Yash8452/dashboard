@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { colors, getGridColor } from "@/utils/constants";
 import { useTheme } from "next-themes";
 
-export default function () {
+export default function RadarChart () {
   Chart.register({
     id: "arc",
     beforeDraw: (chart, args, options) => {

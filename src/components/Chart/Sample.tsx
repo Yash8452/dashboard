@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function () {
+export default function Sample () {
   const { filteredData } = useData();
   // const filteredData: any[] = [];
   const options = {

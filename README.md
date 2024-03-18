@@ -50,6 +50,3 @@ Open http://localhost:3000 in your browser to view the dashboard.
 ## Screenshots
 
 ![DarkMode](https://res.cloudinary.com/dpz01giqq/image/upload/v1710706093/darkdashboard_djvpe7.png)
-
-
-Frontend Library/Frameworks (ReactJs, NextJs), Responsive Web Design, Backend (NodeJs,ExpressJs) ,CSS Framework (BootStrap,TailwindCss),Authentication, RESTful API Design, MongoDB, Continuous Integration/Continuous Deployment (CI/CD), Agile Development, Deployment (Vercel, Netlify), 
